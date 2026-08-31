@@ -32,6 +32,21 @@ export function verifySignature(providedSig: string, expectedSig: string): boole
  * Naive email sanitization function (Target for Lab 3.1 Task 3 Inline Edit)
  */
 export function sanitizeUserEmail(rawEmail: string): string {
-  // Deliberately simplistic placeholder for trainees to refactor via Cmd/Ctrl+K
-  return rawEmail ? rawEmail.trim() : "";
+  if (!rawEmail) {
+    return "";
+  }
+
+  const trimmed = rawEmail.trim();
+  const atIndex = trimmed.lastIndexOf("@");
+  if (atIndex <= 0 || atIndex === trimmed.length - 1) {
+    return "";
+  }
+
+  const localPart = trimmed.slice(0, atIndex);
+  const domainPart = trimmed.slice(atIndex + 1).toLowerCase();
+  const candidate = `${localPart}@${domainPart}`;
+
+  // Practical RFC 5322-inspired check: reject whitespace, multiple @, and missing TLD.
+  const rfc5322Lite = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
+  return rfc5322Lite.test(candidate) ? candidate : "";
 }

@@ -17,4 +17,5 @@ export interface AuditRecord {
   timestamp: string;
   actor?: string;
   payload?: Record<string, unknown>;
+  changes?: Record<string, unknown>;
 }
